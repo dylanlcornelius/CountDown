@@ -1,5 +1,6 @@
 package com.example.countdown
 
+import android.app.DatePickerDialog
 import android.content.Context
 import android.net.Uri
 import android.os.Bundle
@@ -57,32 +58,38 @@ class DateFragment : Fragment() {
         // Inflate the layout for this fragment
         val root = inflater.inflate(R.layout.fragment_date, container, false)
 
-//        view?.findViewById<TextView>(R.id.textViewDate)?.text = endDate
-//        view?.findViewById<Button>(R.id.buttonChooseDate)?.setOnClickListener {
-//            println("here")
-//            Toast.makeText(activity, "Me", Toast.LENGTH_SHORT).show()
-//        }
-
+        val mainActivity = activity as MainActivity
+        // println(mainActivity.dates[0])
         root.findViewById<TextView>(R.id.textViewDate).text = calculateDays(startDate.toString(), endDate.toString())
         root.findViewById<TextView>(R.id.textViewTitle).text = title
         root.findViewById<Button>(R.id.buttonChooseDate).setOnClickListener {
-            Toast.makeText(activity, "Sarah", Toast.LENGTH_SHORT).show()
+            // Toast.makeText(activity, "Sarah", Toast.LENGTH_SHORT).show()
+            val cal = Calendar.getInstance()
+            val dpd = DatePickerDialog(activity!!, DatePickerDialog.OnDateSetListener { view, year, month, dayOfMonth ->
+                cal.set(Calendar.YEAR, year)
+                cal.set(Calendar.MONTH, month)
+                cal.set(Calendar.DAY_OF_MONTH, dayOfMonth)
+
+                val formatter = SimpleDateFormat("MM/dd/yyyy", Locale.getDefault())
+                endDate = formatter.format(cal.time)
+                root.findViewById<TextView>(R.id.textViewDate).text = calculateDays(startDate.toString(), endDate.toString())
+            },
+                cal.get(Calendar.YEAR),
+                cal.get(Calendar.MONTH),
+                cal.get(Calendar.DAY_OF_MONTH)).show()
         }
-//        textViewDate.text = endDate
-//        textViewTitle.text = title
-//        buttonChooseDate.setOnClickListener {
-//            Toast.makeText(activity, "Me", Toast.LENGTH_SHORT).show()
-//        }
 
         return root
     }
 
     private fun calculateDays(startDate: String, endDate: String): String {
+        println(startDate)
+        println(endDate)
         val formatter = SimpleDateFormat("MM/dd/yyyy", Locale.getDefault())
         val start = formatter.parse(startDate)
         val end = formatter.parse(endDate)
 
-        return TimeUnit.DAYS.convert(end.time - start.time, TimeUnit.DAYS).toString()
+        return TimeUnit.DAYS.convert(end.time - start.time, TimeUnit.MILLISECONDS).toString()
     }
 
 //    // TODO: Rename method, update argument and hook method into UI event

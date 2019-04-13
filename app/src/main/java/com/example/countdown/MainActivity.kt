@@ -8,10 +8,14 @@ import android.support.v4.app.FragmentActivity
 import android.support.v4.app.FragmentManager
 import android.widget.Button
 import android.widget.ScrollView
+import android.widget.Toast
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
 class MainActivity : AppCompatActivity() {
+
+    var dates: ArrayList<DateModel> = ArrayList()
+    //= Array<DateModel>(1){DateModel()}
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -22,8 +26,8 @@ class MainActivity : AppCompatActivity() {
 
         println(datePreference)
         if (datePreference != null) {
-            val dates = fromJson(datePreference)
-            println(dates)
+            dates = fromJson(datePreference)
+            // println(dates)
             // for (date in dates) {
             for (i in 0..dates.size) {
                 createDateFragment(i.toString(), dates[i])
@@ -31,11 +35,16 @@ class MainActivity : AppCompatActivity() {
         }
 
         if (supportFragmentManager.findFragmentByTag("0") == null) {
-            createDateFragment("0")
+            dates.add(DateModel())
+            createDateFragment("0", DateModel())
+        }
+
+        findViewById<Button>(R.id.buttonAddDate).setOnClickListener {
+            createDateFragment(dates.size.toString(), DateModel())
         }
     }
 
-    private fun createDateFragment(tag: String, dateData: DateModel = DateModel()) {
+    private fun createDateFragment(tag: String, dateData: DateModel) {
         // println("tag $tag")
         val dateFragment = DateFragment.newInstance(
             dateData.startDate,
@@ -53,7 +62,11 @@ class MainActivity : AppCompatActivity() {
         // println(supportFragmentManager.findFragmentByTag(tag))
     }
 
-    private fun fromJson(datePreference: String):Array<DateModel> {
-        return Gson().fromJson(datePreference, Array<DateModel>::class.java)
+    private fun fromJson(datePreference: String):ArrayList<DateModel> {
+        return Gson().fromJson(datePreference, Array<DateModel>::class.java).toCollection(ArrayList())
+    }
+
+    private fun toJson(dates: Array<DateModel>): String {
+        return Gson().toJson(dates)
     }
 }
