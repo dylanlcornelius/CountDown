@@ -21,8 +21,6 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:id="@+id/my_root">
-
-
         </LinearLayout>
     </ScrollView>
 
