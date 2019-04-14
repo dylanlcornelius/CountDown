@@ -1,14 +1,14 @@
 package com.example.countdown
 
+import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.text.InputType
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.EditText
-import android.widget.TextView
+import android.widget.*
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -16,18 +16,8 @@ import java.util.concurrent.TimeUnit
 
 private const val ARG_FRAGMENT_INDEX = "fragmentIndex"
 
-/**
- * A simple [Fragment] subclass.
- * Activities that contain this fragment must implement the
- * [DateFragment.OnFragmentInteractionListener] interface
- * to handle interaction events.
- * Use the [DateFragment.newInstance] factory method to
- * create an instance of this fragment.
- *
- */
 class DateFragment : Fragment() {
     private var fragmentIndex: String? = null
-//    private var listener: OnFragmentInteractionListener? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,103 +30,103 @@ class DateFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         val root = inflater.inflate(R.layout.fragment_date, container, false)
 
         val mainActivity = activity as MainActivity
         if (fragmentIndex != null) {
             val i = fragmentIndex.toString()
-            println(i)
-            // println(mainActivity.dates[0])
-            root.findViewById<TextView>(R.id.textViewDate).text =
-                calculateDays(mainActivity.dates[i]?.startDate.toString(), mainActivity.dates[i]?.endDate.toString())
-            root.findViewById<EditText>(R.id.editTextTitle).setText(mainActivity.dates[i]?.title.toString())
 
-            // create and maintain list of ids
-            // how to edit title
+            root.findViewById<TextView>(R.id.textViewTitle).text = mainActivity.dates[i]?.title.toString()
+            val today = SimpleDateFormat("MM/dd/yyyy", Locale.getDefault()).format(Calendar.getInstance().time)
+
+            root.findViewById<TextView>(R.id.textViewDate).text =
+                calculateDays(today, mainActivity.dates[i]?.endDate.toString()).toString()
+
+            val progressBar = root.findViewById<ProgressBar>(R.id.progressBar)
+            progressBar.min = 0
+            progressBar.max =
+                calculateDays(mainActivity.dates[i]?.startDate.toString(), mainActivity.dates[i]?.endDate.toString()).toInt()
+            progressBar.progress =
+                calculateDays(mainActivity.dates[i]?.startDate.toString(), today).toInt()
+
             root.findViewById<Button>(R.id.buttonDeleteDate).setOnClickListener {
-                mainActivity.dates.remove(i)
-                mainActivity.savePreferences(mainActivity.dates)
-                mainActivity.supportFragmentManager.beginTransaction().remove(this).commit()
-                mainActivity.supportFragmentManager.executePendingTransactions()
+                val builder = AlertDialog.Builder(context)
+                builder.setTitle("Are you sure you want to delete this count down?")
+
+                builder.setPositiveButton("OK") { _, _ ->
+                    mainActivity.dates.remove(i)
+                    mainActivity.savePreferences(mainActivity.dates)
+                    mainActivity.supportFragmentManager.beginTransaction().remove(this).commit()
+                    mainActivity.supportFragmentManager.executePendingTransactions()
+                }
+
+                builder.setNegativeButton("Cancel") { _, _ -> }
+                builder.create().show()
+            }
+
+            root.findViewById<Button>(R.id.buttonChooseTitle).setOnClickListener {
+                val builder = AlertDialog.Builder(context)
+                builder.setTitle("Set title")
+
+                val editText = EditText(context)
+                editText.inputType = InputType.TYPE_CLASS_TEXT
+                editText.setText(mainActivity.dates[i]?.title)
+                builder.setView(editText)
+
+                builder.setPositiveButton("OK") { _, _ ->
+                    mainActivity.dates[i]?.title = editText.text.toString()
+                    root.findViewById<TextView>(R.id.textViewTitle).text = mainActivity.dates[i]?.title.toString()
+                    mainActivity.savePreferences(mainActivity.dates)
+                    Toast.makeText(context, "Title saved", Toast.LENGTH_SHORT).show()
+                }
+
+                builder.setNegativeButton("Cancel") { _, _ -> }
+                builder.create().show()
             }
 
             root.findViewById<Button>(R.id.buttonChooseDate).setOnClickListener {
-                // Toast.makeText(activity, "Sarah", Toast.LENGTH_SHORT).show()
                 val cal = Calendar.getInstance()
-                DatePickerDialog(
-                    activity!!, DatePickerDialog.OnDateSetListener { view, year, month, dayOfMonth ->
+                val formatter = SimpleDateFormat("MM/dd/yyyy", Locale.getDefault())
+                val dpd = DatePickerDialog(
+                    activity!!, DatePickerDialog.OnDateSetListener { _, year, month, dayOfMonth ->
                         cal.set(Calendar.YEAR, year)
                         cal.set(Calendar.MONTH, month)
                         cal.set(Calendar.DAY_OF_MONTH, dayOfMonth)
 
-                        val formatter = SimpleDateFormat("MM/dd/yyyy", Locale.getDefault())
+                        mainActivity.dates[i]?.startDate = formatter.format(Calendar.getInstance().time)
                         mainActivity.dates[i]?.endDate = formatter.format(cal.time)
-                        root.findViewById<TextView>(R.id.textViewDate).text =
-                            calculateDays(mainActivity.dates[i]?.startDate.toString(), mainActivity.dates[i]?.endDate.toString())
 
+                        root.findViewById<TextView>(R.id.textViewDate).text =
+                            calculateDays(mainActivity.dates[i]?.startDate.toString(), mainActivity.dates[i]?.endDate.toString()).toString()
                         mainActivity.savePreferences(mainActivity.dates)
+                        Toast.makeText(context, "Date saved", Toast.LENGTH_SHORT).show()
                     },
                     cal.get(Calendar.YEAR),
                     cal.get(Calendar.MONTH),
                     cal.get(Calendar.DAY_OF_MONTH)
-                ).show()
+                )
+
+                dpd.datePicker.minDate = System.currentTimeMillis()
+                val endCal = Calendar.getInstance()
+                endCal.time = formatter.parse(mainActivity.dates[i]?.endDate)
+                dpd.datePicker.updateDate(endCal.get(Calendar.YEAR), endCal.get(Calendar.MONTH), endCal.get(Calendar.DAY_OF_MONTH))
+                dpd.show()
             }
         }
 
         return root
     }
 
-    private fun calculateDays(startDate: String, endDate: String): String {
-        println(startDate)
-        println(endDate)
+    private fun calculateDays(startDate: String, endDate: String): Long {
         val formatter = SimpleDateFormat("MM/dd/yyyy", Locale.getDefault())
         val start = formatter.parse(startDate)
         val end = formatter.parse(endDate)
 
-        return TimeUnit.DAYS.convert(end.time - start.time, TimeUnit.MILLISECONDS).toString()
+        return TimeUnit.DAYS.convert(end.time - start.time, TimeUnit.MILLISECONDS)
     }
-
-//    // TODO: Rename method, update argument and hook method into UI event
-//    fun onButtonPressed(uri: Uri) {
-//        listener?.onFragmentInteraction(uri)
-//    }
-
-//    override fun onAttach(context: Context) {
-//        super.onAttach(context)
-//        if (context is OnFragmentInteractionListener) {
-//            listener = context
-//        } else {
-//            throw RuntimeException(context.toString() + " must implement OnFragmentInteractionListener")
-//        }
-//    }
-//
-//    override fun onDetach() {
-//        super.onDetach()
-//        listener = null
-//    }
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     *
-     *
-     * See the Android Training lesson [Communicating with Other Fragments]
-     * (http://developer.android.com/training/basics/fragments/communicating.html)
-     * for more information.
-     */
-//    interface OnFragmentInteractionListener {
-//        // TODO: Update argument type and name
-//        fun onFragmentInteraction(uri: Uri)
-//    }
 
     companion object {
         /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
          * @param fragmentIngex Parameter 1.
          * @return A new instance of fragment DateFragment.
          */

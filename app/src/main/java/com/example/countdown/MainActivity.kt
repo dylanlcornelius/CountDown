@@ -10,7 +10,6 @@ class MainActivity : AppCompatActivity() {
 
     var dates: MutableMap<String, DateModel> = mutableMapOf()
     var countDowns: Int = 0;
-    // var dates: ArrayList<DateModel> = ArrayList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -19,20 +18,14 @@ class MainActivity : AppCompatActivity() {
         val sharedPreference = getSharedPreferences(getString(R.string.DATE_PREFERENCE_KEY), Context.MODE_PRIVATE)
         val datePreference = sharedPreference.getString(getString(R.string.DATE_PREFERENCE_KEY), null)
 
-        println(datePreference)
         // sharedPreference.edit().clear().apply()
         if (datePreference != null) {
-            // dates = fromJson(datePreference)
             val dateJson = fromJson(datePreference)
-            println(dateJson)
-            println(dateJson.size)
-            // for (date in dates) {
             for (i in 0 until dateJson.size) {
                 dates[i.toString()] = dateJson[i]
                 createDateFragment(i.toString())
                 countDowns++
             }
-            println(dates)
         }
 
         if (supportFragmentManager.findFragmentByTag("0") == null) {
@@ -66,7 +59,7 @@ class MainActivity : AppCompatActivity() {
 
     fun savePreferences(dates: MutableMap<String, DateModel>) {
         val dateJson: ArrayList<DateModel> = ArrayList()
-        for ((key, value) in dates) {
+        for ((_, value) in dates) {
             dateJson.add(value)
         }
 
