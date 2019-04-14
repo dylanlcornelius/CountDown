@@ -7,15 +7,6 @@
     android:background="@android:color/black"
     tools:context=".MainActivity">
 
-    <!--<LinearLayout-->
-    <!--android:layout_width="0dp"-->
-    <!--android:layout_height="0dp"-->
-    <!--android:orientation="vertical"-->
-    <!--app:layout_constraintBottom_toBottomOf="parent"-->
-    <!--app:layout_constraintEnd_toEndOf="parent"-->
-    <!--app:layout_constraintStart_toStartOf="parent"-->
-    <!--app:layout_constraintTop_toTopOf="parent">-->
-
     <ScrollView
         android:id="@+id/scrollView2"
         android:layout_width="0dp"
@@ -39,7 +30,6 @@
         </LinearLayout>
     </ScrollView>
 
-
     <Button
         android:id="@+id/buttonAddDate"
         style="@style/Widget.AppCompat.Button.Small"
@@ -52,7 +42,5 @@
         android:textSize="10sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
-
-    <!--</LinearLayout>-->
 
 </android.support.constraint.ConstraintLayout>
