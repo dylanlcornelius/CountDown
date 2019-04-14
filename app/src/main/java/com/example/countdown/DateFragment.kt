@@ -1,17 +1,14 @@
 package com.example.countdown
 
 import android.app.DatePickerDialog
-import android.content.Context
-import android.net.Uri
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.EditText
 import android.widget.TextView
-import android.widget.Toast
-import kotlinx.android.synthetic.main.fragment_date.*
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -29,13 +26,13 @@ private const val ARG_FRAGMENT_INDEX = "fragmentIndex"
  *
  */
 class DateFragment : Fragment() {
-    private var fragmentIndex: Int = -1
+    private var fragmentIndex: String? = null
 //    private var listener: OnFragmentInteractionListener? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            fragmentIndex = it.getInt(ARG_FRAGMENT_INDEX)
+            fragmentIndex = it.getString(ARG_FRAGMENT_INDEX)
         }
     }
 
@@ -47,16 +44,18 @@ class DateFragment : Fragment() {
         val root = inflater.inflate(R.layout.fragment_date, container, false)
 
         val mainActivity = activity as MainActivity
-        if (fragmentIndex != -1) {
+        if (fragmentIndex != null) {
+            val i = fragmentIndex.toString()
+            println(i)
             // println(mainActivity.dates[0])
             root.findViewById<TextView>(R.id.textViewDate).text =
-                calculateDays(mainActivity.dates[fragmentIndex].startDate, mainActivity.dates[fragmentIndex].endDate)
-            root.findViewById<TextView>(R.id.textViewTitle).text = mainActivity.dates[fragmentIndex].title
+                calculateDays(mainActivity.dates[i]?.startDate.toString(), mainActivity.dates[i]?.endDate.toString())
+            root.findViewById<EditText>(R.id.editTextTitle).setText(mainActivity.dates[i]?.title.toString())
 
             // create and maintain list of ids
             // how to edit title
             root.findViewById<Button>(R.id.buttonDeleteDate).setOnClickListener {
-                mainActivity.dates.removeAt(fragmentIndex)
+                mainActivity.dates.remove(i)
                 mainActivity.savePreferences(mainActivity.dates)
                 mainActivity.supportFragmentManager.beginTransaction().remove(this).commit()
                 mainActivity.supportFragmentManager.executePendingTransactions()
@@ -72,9 +71,9 @@ class DateFragment : Fragment() {
                         cal.set(Calendar.DAY_OF_MONTH, dayOfMonth)
 
                         val formatter = SimpleDateFormat("MM/dd/yyyy", Locale.getDefault())
-                        mainActivity.dates[fragmentIndex].endDate = formatter.format(cal.time)
+                        mainActivity.dates[i]?.endDate = formatter.format(cal.time)
                         root.findViewById<TextView>(R.id.textViewDate).text =
-                            calculateDays(mainActivity.dates[fragmentIndex].startDate, mainActivity.dates[fragmentIndex].endDate)
+                            calculateDays(mainActivity.dates[i]?.startDate.toString(), mainActivity.dates[i]?.endDate.toString())
 
                         mainActivity.savePreferences(mainActivity.dates)
                     },
@@ -142,10 +141,10 @@ class DateFragment : Fragment() {
          * @return A new instance of fragment DateFragment.
          */
         @JvmStatic
-        fun newInstance(fragmentIndex: Int) =
+        fun newInstance(fragmentIndex: String) =
             DateFragment().apply {
                 arguments = Bundle().apply {
-                    putInt(ARG_FRAGMENT_INDEX, fragmentIndex)
+                    putString(ARG_FRAGMENT_INDEX, fragmentIndex)
                 }
             }
     }

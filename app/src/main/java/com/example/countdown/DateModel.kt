@@ -8,5 +8,5 @@ data class DateModel (
     var startTime: String = "",
     var endDate: String = SimpleDateFormat("MM/dd/yyyy", Locale.getDefault()).format(Calendar.getInstance().time),
     var endTime: String = "",
-    var title: String = "days left"
+    var title: String = ""
 )

@@ -1,21 +1,16 @@
 package com.example.countdown
 
 import android.content.Context
-import android.content.SharedPreferences
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.support.v4.app.FragmentActivity
-import android.support.v4.app.FragmentManager
 import android.widget.Button
-import android.widget.ScrollView
-import android.widget.Toast
 import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 
 class MainActivity : AppCompatActivity() {
 
-    var dates: ArrayList<DateModel> = ArrayList()
-    //= Array<DateModel>(1){DateModel()}
+    var dates: MutableMap<String, DateModel> = mutableMapOf()
+    var countDowns: Int = 0;
+    // var dates: ArrayList<DateModel> = ArrayList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,43 +22,38 @@ class MainActivity : AppCompatActivity() {
         println(datePreference)
         // sharedPreference.edit().clear().apply()
         if (datePreference != null) {
-            dates = fromJson(datePreference)
-            println(dates)
-            println(dates.size)
+            // dates = fromJson(datePreference)
+            val dateJson = fromJson(datePreference)
+            println(dateJson)
+            println(dateJson.size)
             // for (date in dates) {
-            for (i in 0 until dates.size) {
-//                dates.add(DateModel(
-//                    dates[i].startDate,
-//                    dates[i].startTime,
-//                    dates[i].endDate,
-//                    dates[i].endTime,
-//                    dates[i].title
-//                ))
-                createDateFragment(i)
+            for (i in 0 until dateJson.size) {
+                dates[i.toString()] = dateJson[i]
+                createDateFragment(i.toString())
+                countDowns++
             }
+            println(dates)
         }
 
         if (supportFragmentManager.findFragmentByTag("0") == null) {
-            dates.add(DateModel())
-            createDateFragment(0)
+            dates["0"] = DateModel()
+            createDateFragment("0")
+            countDowns++
         }
 
         findViewById<Button>(R.id.buttonAddDate).setOnClickListener {
-            dates.add(DateModel())
-            createDateFragment(dates.size - 1)
+            dates[countDowns.toString()] = DateModel()
+            createDateFragment(countDowns.toString())
+            countDowns++
         }
     }
 
-    private fun createDateFragment(tag: Int) {
-        // println("tag $tag")
+    private fun createDateFragment(tag: String) {
         val dateFragment = DateFragment.newInstance(tag)
-        // firstDateFragment.arguments = intent.extras;
         val transaction = supportFragmentManager.beginTransaction()
-        transaction.add(R.id.my_root, dateFragment, tag.toString())
+        transaction.add(R.id.my_root, dateFragment, tag)
         transaction.commit()
         supportFragmentManager.executePendingTransactions()
-
-        // println(supportFragmentManager.findFragmentByTag(tag))
     }
 
     private fun fromJson(datePreference: String):ArrayList<DateModel> {
@@ -74,8 +64,13 @@ class MainActivity : AppCompatActivity() {
         return Gson().toJson(dates)
     }
 
-    fun savePreferences(dates: ArrayList<DateModel>) {
+    fun savePreferences(dates: MutableMap<String, DateModel>) {
+        val dateJson: ArrayList<DateModel> = ArrayList()
+        for ((key, value) in dates) {
+            dateJson.add(value)
+        }
+
         val sharedPreference = getSharedPreferences(getString(R.string.DATE_PREFERENCE_KEY), Context.MODE_PRIVATE)
-        sharedPreference.edit().putString(getString(R.string.DATE_PREFERENCE_KEY), toJson(dates)).apply()
+        sharedPreference.edit().putString(getString(R.string.DATE_PREFERENCE_KEY), toJson(dateJson)).apply()
     }
 }
