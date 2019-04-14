@@ -25,37 +25,41 @@ class MainActivity : AppCompatActivity() {
         val datePreference = sharedPreference.getString(getString(R.string.DATE_PREFERENCE_KEY), null)
 
         println(datePreference)
+        // sharedPreference.edit().clear().apply()
         if (datePreference != null) {
             dates = fromJson(datePreference)
-            // println(dates)
+            println(dates)
+            println(dates.size)
             // for (date in dates) {
-            for (i in 0..dates.size) {
-                createDateFragment(i.toString(), dates[i])
+            for (i in 0 until dates.size) {
+//                dates.add(DateModel(
+//                    dates[i].startDate,
+//                    dates[i].startTime,
+//                    dates[i].endDate,
+//                    dates[i].endTime,
+//                    dates[i].title
+//                ))
+                createDateFragment(i)
             }
         }
 
         if (supportFragmentManager.findFragmentByTag("0") == null) {
             dates.add(DateModel())
-            createDateFragment("0", DateModel())
+            createDateFragment(0)
         }
 
         findViewById<Button>(R.id.buttonAddDate).setOnClickListener {
-            createDateFragment(dates.size.toString(), DateModel())
+            dates.add(DateModel())
+            createDateFragment(dates.size - 1)
         }
     }
 
-    private fun createDateFragment(tag: String, dateData: DateModel) {
+    private fun createDateFragment(tag: Int) {
         // println("tag $tag")
-        val dateFragment = DateFragment.newInstance(
-            dateData.startDate,
-            dateData.startTime,
-            dateData.endDate,
-            dateData.endTime,
-            dateData.title
-        )
+        val dateFragment = DateFragment.newInstance(tag)
         // firstDateFragment.arguments = intent.extras;
         val transaction = supportFragmentManager.beginTransaction()
-        transaction.add(R.id.my_root, dateFragment, tag)
+        transaction.add(R.id.my_root, dateFragment, tag.toString())
         transaction.commit()
         supportFragmentManager.executePendingTransactions()
 
@@ -66,7 +70,12 @@ class MainActivity : AppCompatActivity() {
         return Gson().fromJson(datePreference, Array<DateModel>::class.java).toCollection(ArrayList())
     }
 
-    private fun toJson(dates: Array<DateModel>): String {
+    private fun toJson(dates: ArrayList<DateModel>): String {
         return Gson().toJson(dates)
+    }
+
+    fun savePreferences(dates: ArrayList<DateModel>) {
+        val sharedPreference = getSharedPreferences(getString(R.string.DATE_PREFERENCE_KEY), Context.MODE_PRIVATE)
+        sharedPreference.edit().putString(getString(R.string.DATE_PREFERENCE_KEY), toJson(dates)).apply()
     }
 }

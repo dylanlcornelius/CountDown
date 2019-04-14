@@ -17,11 +17,7 @@ import java.util.*
 import java.util.concurrent.TimeUnit
 
 
-private const val ARG_START_DATE = "startDate"
-private const val ARG_START_TIME = "startTime"
-private const val ARG_END_DATE = "endDate"
-private const val ARG_END_TIME = "endTime"
-private const val ARG_TITLE = "title"
+private const val ARG_FRAGMENT_INDEX = "fragmentIndex"
 
 /**
  * A simple [Fragment] subclass.
@@ -33,21 +29,13 @@ private const val ARG_TITLE = "title"
  *
  */
 class DateFragment : Fragment() {
-    private var startDate: String? = ""
-    private var startTime: String? = ""
-    private var endDate: String? = ""
-    private var endTime: String? = ""
-    private var title: String? = ""
+    private var fragmentIndex: Int = -1
 //    private var listener: OnFragmentInteractionListener? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            startDate = it.getString(ARG_START_DATE)
-            startTime = it.getString(ARG_START_TIME)
-            endDate = it.getString(ARG_END_DATE)
-            endTime = it.getString(ARG_END_TIME)
-            title = it.getString(ARG_TITLE)
+            fragmentIndex = it.getInt(ARG_FRAGMENT_INDEX)
         }
     }
 
@@ -59,24 +47,42 @@ class DateFragment : Fragment() {
         val root = inflater.inflate(R.layout.fragment_date, container, false)
 
         val mainActivity = activity as MainActivity
-        // println(mainActivity.dates[0])
-        root.findViewById<TextView>(R.id.textViewDate).text = calculateDays(startDate.toString(), endDate.toString())
-        root.findViewById<TextView>(R.id.textViewTitle).text = title
-        root.findViewById<Button>(R.id.buttonChooseDate).setOnClickListener {
-            // Toast.makeText(activity, "Sarah", Toast.LENGTH_SHORT).show()
-            val cal = Calendar.getInstance()
-            val dpd = DatePickerDialog(activity!!, DatePickerDialog.OnDateSetListener { view, year, month, dayOfMonth ->
-                cal.set(Calendar.YEAR, year)
-                cal.set(Calendar.MONTH, month)
-                cal.set(Calendar.DAY_OF_MONTH, dayOfMonth)
+        if (fragmentIndex != -1) {
+            // println(mainActivity.dates[0])
+            root.findViewById<TextView>(R.id.textViewDate).text =
+                calculateDays(mainActivity.dates[fragmentIndex].startDate, mainActivity.dates[fragmentIndex].endDate)
+            root.findViewById<TextView>(R.id.textViewTitle).text = mainActivity.dates[fragmentIndex].title
 
-                val formatter = SimpleDateFormat("MM/dd/yyyy", Locale.getDefault())
-                endDate = formatter.format(cal.time)
-                root.findViewById<TextView>(R.id.textViewDate).text = calculateDays(startDate.toString(), endDate.toString())
-            },
-                cal.get(Calendar.YEAR),
-                cal.get(Calendar.MONTH),
-                cal.get(Calendar.DAY_OF_MONTH)).show()
+            // create and maintain list of ids
+            // how to edit title
+            root.findViewById<Button>(R.id.buttonDeleteDate).setOnClickListener {
+                mainActivity.dates.removeAt(fragmentIndex)
+                mainActivity.savePreferences(mainActivity.dates)
+                mainActivity.supportFragmentManager.beginTransaction().remove(this).commit()
+                mainActivity.supportFragmentManager.executePendingTransactions()
+            }
+
+            root.findViewById<Button>(R.id.buttonChooseDate).setOnClickListener {
+                // Toast.makeText(activity, "Sarah", Toast.LENGTH_SHORT).show()
+                val cal = Calendar.getInstance()
+                DatePickerDialog(
+                    activity!!, DatePickerDialog.OnDateSetListener { view, year, month, dayOfMonth ->
+                        cal.set(Calendar.YEAR, year)
+                        cal.set(Calendar.MONTH, month)
+                        cal.set(Calendar.DAY_OF_MONTH, dayOfMonth)
+
+                        val formatter = SimpleDateFormat("MM/dd/yyyy", Locale.getDefault())
+                        mainActivity.dates[fragmentIndex].endDate = formatter.format(cal.time)
+                        root.findViewById<TextView>(R.id.textViewDate).text =
+                            calculateDays(mainActivity.dates[fragmentIndex].startDate, mainActivity.dates[fragmentIndex].endDate)
+
+                        mainActivity.savePreferences(mainActivity.dates)
+                    },
+                    cal.get(Calendar.YEAR),
+                    cal.get(Calendar.MONTH),
+                    cal.get(Calendar.DAY_OF_MONTH)
+                ).show()
+            }
         }
 
         return root
@@ -132,22 +138,14 @@ class DateFragment : Fragment() {
          * Use this factory method to create a new instance of
          * this fragment using the provided parameters.
          *
-         * @param startDate Parameter 1.
-         * @param startTime Parameter 2.
-         * @param endDate Parameter 3.
-         * @param endTime Parameter 4.
-         * @param title Parameter 5.
+         * @param fragmentIngex Parameter 1.
          * @return A new instance of fragment DateFragment.
          */
         @JvmStatic
-        fun newInstance(startDate: String, startTime: String, endDate: String, endTime: String, title: String) =
+        fun newInstance(fragmentIndex: Int) =
             DateFragment().apply {
                 arguments = Bundle().apply {
-                    putString(ARG_START_DATE, startDate)
-                    putString(ARG_START_TIME, startTime)
-                    putString(ARG_END_DATE, endDate)
-                    putString(ARG_END_TIME, endTime)
-                    putString(ARG_TITLE, title)
+                    putInt(ARG_FRAGMENT_INDEX, fragmentIndex)
                 }
             }
     }
