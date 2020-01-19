@@ -13,7 +13,6 @@ import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
 
-
 private const val ARG_FRAGMENT_INDEX = "fragmentIndex"
 
 class DateFragment : Fragment() {
@@ -26,36 +25,34 @@ class DateFragment : Fragment() {
         }
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
+    /**
+     * sets UI and creates button events
+     */
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val root = inflater.inflate(R.layout.fragment_date, container, false)
 
         val mainActivity = activity as MainActivity
         if (fragmentIndex != null) {
             val i = fragmentIndex.toString()
 
-            root.findViewById<TextView>(R.id.textViewTitle).text = mainActivity.dates[i]?.title.toString()
+            root.findViewById<TextView>(R.id.textViewTitle).text = DateService.dates[i]?.title.toString()
             val today = SimpleDateFormat("MM/dd/yyyy", Locale.getDefault()).format(Calendar.getInstance().time)
 
-            root.findViewById<TextView>(R.id.textViewDate).text =
-                calculateDays(today, mainActivity.dates[i]?.endDate.toString()).toString()
+            root.findViewById<TextView>(R.id.textViewDate).text = calculateDays(today, DateService.dates[i]?.endDate.toString()).toString()
 
             val progressBar = root.findViewById<ProgressBar>(R.id.progressBar)
             progressBar.min = 0
-            progressBar.max =
-                calculateDays(mainActivity.dates[i]?.startDate.toString(), mainActivity.dates[i]?.endDate.toString()).toInt()
-            progressBar.progress =
-                calculateDays(mainActivity.dates[i]?.startDate.toString(), today).toInt()
+            progressBar.max = calculateDays(DateService.dates[i]?.startDate.toString(), DateService.dates[i]?.endDate.toString()).toInt()
+
+            progressBar.progress = calculateDays(DateService.dates[i]?.startDate.toString(), today).toInt()
 
             root.findViewById<Button>(R.id.buttonDeleteDate).setOnClickListener {
-                val builder = AlertDialog.Builder(context)
+                val builder = AlertDialog.Builder(context, android.R.style.Theme_Material_Dialog_Alert)
                 builder.setTitle("Are you sure you want to delete this count down?")
 
                 builder.setPositiveButton("OK") { _, _ ->
-                    mainActivity.dates.remove(i)
-                    mainActivity.savePreferences(mainActivity.dates)
+                    DateService.dates.remove(i)
+                    DateService.savePreferences(mainActivity)
                     mainActivity.supportFragmentManager.beginTransaction().remove(this).commit()
                     mainActivity.supportFragmentManager.executePendingTransactions()
                 }
@@ -65,18 +62,18 @@ class DateFragment : Fragment() {
             }
 
             root.findViewById<Button>(R.id.buttonChooseTitle).setOnClickListener {
-                val builder = AlertDialog.Builder(context)
+                val builder = AlertDialog.Builder(context, android.R.style.Theme_Material_Dialog_Alert)
                 builder.setTitle("Set title")
 
                 val editText = EditText(context)
                 editText.inputType = InputType.TYPE_CLASS_TEXT
-                editText.setText(mainActivity.dates[i]?.title)
+                editText.setText(DateService.dates[i]?.title)
                 builder.setView(editText)
 
                 builder.setPositiveButton("OK") { _, _ ->
-                    mainActivity.dates[i]?.title = editText.text.toString()
-                    root.findViewById<TextView>(R.id.textViewTitle).text = mainActivity.dates[i]?.title.toString()
-                    mainActivity.savePreferences(mainActivity.dates)
+                    DateService.dates[i]?.title = editText.text.toString()
+                    root.findViewById<TextView>(R.id.textViewTitle).text = DateService.dates[i]?.title.toString()
+                    DateService.savePreferences(mainActivity)
                     Toast.makeText(context, "Title saved", Toast.LENGTH_SHORT).show()
                 }
 
@@ -88,17 +85,18 @@ class DateFragment : Fragment() {
                 val cal = Calendar.getInstance()
                 val formatter = SimpleDateFormat("MM/dd/yyyy", Locale.getDefault())
                 val dpd = DatePickerDialog(
-                    activity!!, DatePickerDialog.OnDateSetListener { _, year, month, dayOfMonth ->
+                    activity!!,
+                    android.R.style.Theme_Material_Dialog_Alert,
+                    DatePickerDialog.OnDateSetListener { _, year, month, dayOfMonth ->
                         cal.set(Calendar.YEAR, year)
                         cal.set(Calendar.MONTH, month)
                         cal.set(Calendar.DAY_OF_MONTH, dayOfMonth)
 
-                        mainActivity.dates[i]?.startDate = formatter.format(Calendar.getInstance().time)
-                        mainActivity.dates[i]?.endDate = formatter.format(cal.time)
+                        DateService.dates[i]?.startDate = formatter.format(Calendar.getInstance().time)
+                        DateService.dates[i]?.endDate = formatter.format(cal.time)
 
-                        root.findViewById<TextView>(R.id.textViewDate).text =
-                            calculateDays(mainActivity.dates[i]?.startDate.toString(), mainActivity.dates[i]?.endDate.toString()).toString()
-                        mainActivity.savePreferences(mainActivity.dates)
+                        root.findViewById<TextView>(R.id.textViewDate).text = calculateDays(DateService.dates[i]?.startDate.toString(), DateService.dates[i]?.endDate.toString()).toString()
+                        DateService.savePreferences(mainActivity)
                         Toast.makeText(context, "Date saved", Toast.LENGTH_SHORT).show()
                     },
                     cal.get(Calendar.YEAR),
@@ -106,9 +104,10 @@ class DateFragment : Fragment() {
                     cal.get(Calendar.DAY_OF_MONTH)
                 )
 
-                dpd.datePicker.minDate = System.currentTimeMillis()
+                // removing minimum date for now
+                // dpd.datePicker.minDate = System.currentTimeMillis()
                 val endCal = Calendar.getInstance()
-                endCal.time = formatter.parse(mainActivity.dates[i]?.endDate)
+                endCal.time = formatter.parse(DateService.dates[i]?.endDate)
                 dpd.datePicker.updateDate(endCal.get(Calendar.YEAR), endCal.get(Calendar.MONTH), endCal.get(Calendar.DAY_OF_MONTH))
                 dpd.show()
             }
@@ -117,6 +116,9 @@ class DateFragment : Fragment() {
         return root
     }
 
+    /**
+     * calculates days between two dates
+     */
     private fun calculateDays(startDate: String, endDate: String): Long {
         val formatter = SimpleDateFormat("MM/dd/yyyy", Locale.getDefault())
         val start = formatter.parse(startDate)

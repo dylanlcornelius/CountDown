@@ -1,69 +1,31 @@
 package com.example.countdown
 
-import android.content.Context
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Button
-import com.google.gson.Gson
+import android.support.design.widget.TabLayout
+import android.support.v4.view.ViewPager
 
 class MainActivity : AppCompatActivity() {
 
-    var dates: MutableMap<String, DateModel> = mutableMapOf()
-    var countDowns: Int = 0;
+    private lateinit var adapter: TabAdapter
+    private lateinit var tabLayout: TabLayout
+    private lateinit var viewPager: ViewPager
 
+    /**
+     * sets up tabs
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val sharedPreference = getSharedPreferences(getString(R.string.DATE_PREFERENCE_KEY), Context.MODE_PRIVATE)
-        val datePreference = sharedPreference.getString(getString(R.string.DATE_PREFERENCE_KEY), null)
+        viewPager = findViewById(R.id.viewPager)
+        tabLayout = findViewById(R.id.tabLayout)
 
-        // sharedPreference.edit().clear().apply()
-        if (datePreference != null) {
-            val dateJson = fromJson(datePreference)
-            for (i in 0 until dateJson.size) {
-                dates[i.toString()] = dateJson[i]
-                createDateFragment(i.toString())
-                countDowns++
-            }
-        }
+        adapter = TabAdapter(supportFragmentManager)
+        adapter.addFragment(TabCountDownFragment(), "Count Down")
+        adapter.addFragment(TabCountUpFragment(), "Count Up")
 
-        if (supportFragmentManager.findFragmentByTag("0") == null) {
-            dates["0"] = DateModel()
-            createDateFragment("0")
-            countDowns++
-        }
-
-        findViewById<Button>(R.id.buttonAddDate).setOnClickListener {
-            dates[countDowns.toString()] = DateModel()
-            createDateFragment(countDowns.toString())
-            countDowns++
-        }
-    }
-
-    private fun createDateFragment(tag: String) {
-        val dateFragment = DateFragment.newInstance(tag)
-        val transaction = supportFragmentManager.beginTransaction()
-        transaction.add(R.id.my_root, dateFragment, tag)
-        transaction.commit()
-        supportFragmentManager.executePendingTransactions()
-    }
-
-    private fun fromJson(datePreference: String):ArrayList<DateModel> {
-        return Gson().fromJson(datePreference, Array<DateModel>::class.java).toCollection(ArrayList())
-    }
-
-    private fun toJson(dates: ArrayList<DateModel>): String {
-        return Gson().toJson(dates)
-    }
-
-    fun savePreferences(dates: MutableMap<String, DateModel>) {
-        val dateJson: ArrayList<DateModel> = ArrayList()
-        for ((_, value) in dates) {
-            dateJson.add(value)
-        }
-
-        val sharedPreference = getSharedPreferences(getString(R.string.DATE_PREFERENCE_KEY), Context.MODE_PRIVATE)
-        sharedPreference.edit().putString(getString(R.string.DATE_PREFERENCE_KEY), toJson(dateJson)).apply()
+        viewPager.adapter = adapter
+        tabLayout.setupWithViewPager(viewPager)
     }
 }
