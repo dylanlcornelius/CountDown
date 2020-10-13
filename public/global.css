@@ -1,0 +1,57 @@
+html, body {
+	position: relative;
+}
+body {
+	color: #F4F0EB;
+	background-color: #2B282E;
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+	font-family: Roboto, "Segoe UI", sans-serif;
+}
+a {
+	color: rgb(0,100,200);
+	text-decoration: none;
+}
+a:hover {
+	text-decoration: underline;
+}
+a:visited {
+	color: rgb(0,80,160);
+}
+h1, h2, h3, h4, h5, h6 {
+	margin: 0;
+}
+label {
+	display: block;
+}
+input, button, select, textarea {
+	font-family: inherit;
+	font-size: inherit;
+	padding: 0.4em;
+	box-sizing: border-box;
+	border: 1px solid #ccc;
+	border-radius: 2px;
+}
+input:disabled {
+	color: #ccc;
+}
+input[type="range"] {
+	height: 0;
+}
+.smui-paper {
+	display: flex;
+	flex-direction: column;
+	padding: 8px !important;
+}
+.mdc-linear-progress {
+	text-align: start;
+}
+.mdc-button {
+	padding: 0 8px !important;
+	font-size: 12px !important;
+	min-width: 30px !important;
+}
+.mdc-tab span.mdc-tab__text-label {
+    color: #F4F0EB;
+}
