@@ -23,7 +23,8 @@
     onMount(() => {
         user.subscribe(user => {
             countSubscription = CountService.get(user.uid).subscribe(c => {
-                counts = c;
+                // use alphabetical until adding display order
+                counts = c.sort((a, b) => a.title.toLowerCase().localeCompare(b.title.toLowerCase()));
                 loading.set(false);
             });
         });

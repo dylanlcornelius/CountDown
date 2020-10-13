@@ -3,6 +3,10 @@
 	import CountList from './count-list/count-list.svelte';
     import { selectedTab } from './shared/selected-tab.store.js';
 	import Footer from './footer/footer.svelte';
+
+	if ('serviceWorker' in navigator) {
+		navigator.serviceWorker.register('/service-worker.js');
+	}
 </script>
 
 <main>
