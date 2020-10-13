@@ -1,6 +1,7 @@
 import { firebase } from '@firebase/app';
 import { environment } from '../environment.js';
 import 'firebase/firestore';
+import { Observable } from 'rxjs';
 
 firebase.initializeApp(environment.firebaseConfig);
 firebase.firestore().enablePersistence();
@@ -10,33 +11,38 @@ export default {
     getRef(collection) {
         return firestore.collection(collection);
     },
-    async get(ref) {
+    getAll(ref) {
         return new Observable(observer => {
-            ref.onSnapshot(async querySnapshot => {
-                observer.next(querySnapshot.map(doc => {
-                    return { id: doc.id, ...doc.data()};
-                }));
+            ref.onSnapshot(querySnapshot => {
+                observer.next(querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data()})));
             });
         });
     },
-    async insert(ref, data) {
+    get(ref, id, field) {
+        if (id && field) {
+            return this.getAll(ref.where(field, 'array-contains', id));
+        } else {
+            return this.getAll(ref);
+        }
+    },
+    insert(ref, data) {
         ref.add(data).catch(error => {
             console.error(error);
         });
     },
-    async update(ref, data) {
+    update(ref, data) {
         ref.doc(data.id).set(data).catch(error => {
             console.error(error);
         });
     },
-    async upsert(ref, data) {
+    upsert(ref, data) {
         if (data.id) {
             this.update(ref, data);
         } else {
             this.insert(ref, data)
         }
     },
-    async delete(ref, id) {
+    delete(ref, id) {
         ref.doc(id).delete().catch(error => {
             console.error(error);
         });

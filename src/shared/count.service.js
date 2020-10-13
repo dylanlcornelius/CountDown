@@ -1,14 +1,19 @@
+import { Observable } from 'rxjs';
 import FirestoreService from './firestore.service.js';
 
+const ref = FirestoreService.getRef('counts');
+
 export default {
-    ref: FirestoreService.getRef('counts'),
-    async get() {
-        return FirestoreService.get(ref);
+    get(uid) {
+        if (!uid) {
+            return new Observable(observable => observable.next([]));
+        }
+        return FirestoreService.get(ref, uid, 'uids');
     },
-    async upsert(data) {
+    upsert(data) {
         FirestoreService.upsert(ref, data);
     },
-    async delete(id) {
+    delete(id) {
         FirestoreService.delete(ref, id);
     }
 }

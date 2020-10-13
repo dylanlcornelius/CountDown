@@ -1,66 +1,57 @@
 html, body {
 	position: relative;
-	width: 100%;
-	height: 100%;
 }
-
 body {
-	color: #333;
+	color: #F4F0EB;
+	background-color: #2B282E;
 	margin: 0;
-	padding: 8px;
+	padding: 0;
 	box-sizing: border-box;
 	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
 }
-
 a {
 	color: rgb(0,100,200);
 	text-decoration: none;
 }
-
 a:hover {
 	text-decoration: underline;
 }
-
 a:visited {
 	color: rgb(0,80,160);
 }
-
+h1, h2, h3, h4, h5, h6 {
+	margin: 0;
+}
 label {
 	display: block;
 }
-
 input, button, select, textarea {
 	font-family: inherit;
 	font-size: inherit;
 	padding: 0.4em;
-	margin: 0 0 0.5em 0;
 	box-sizing: border-box;
 	border: 1px solid #ccc;
 	border-radius: 2px;
 }
-
 input:disabled {
 	color: #ccc;
 }
-
 input[type="range"] {
 	height: 0;
 }
-
-button {
-	color: #333;
-	background-color: #f4f4f4;
-	outline: none;
+.smui-paper {
+	display: flex;
+	flex-direction: column;
+	padding: 8px !important;
 }
-
-button:disabled {
-	color: #999;
+.mdc-linear-progress {
+	text-align: start;
 }
-
-button:not(:disabled):active {
-	background-color: #ddd;
+.mdc-button {
+	padding: 0 4px !important;
+	font-size: 12px !important;
+	min-width: 30px !important;
 }
-
-button:focus {
-	border-color: #666;
+.mdc-tab span.mdc-tab__text-label {
+    color: #F4F0EB;
 }
