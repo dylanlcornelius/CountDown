@@ -12,9 +12,9 @@
     }
 </script>
 
-<Button on:click={open} variant="unelevated"><Label>
+<button on:click={open}>
     <slot name="name"></slot>
-</Label></Button>
+</button>
 {#if isOpen} 
     <div class="overlay" on:click={close}></div>
     <div class="modal">
@@ -27,6 +27,16 @@
 {/if}
 
 <style>
+    button {
+        border: none;
+        width: 75%;
+        margin: 0 auto;
+        padding: 0;
+    }
+    button:focus {
+        outline: none;
+        background-color: #e4e4e4;
+    }
     .overlay {
         z-index: 1;
         position: fixed;

@@ -13,24 +13,17 @@
 </script>
 
 <Count id={count.id}>
-    <h3>{count.title}</h3>
-    <h4>{Math.abs(value)}</h4>
-    {#if value <= 0} 
+    <TitleModal {count} on:submit><h3>{count.title}</h3></TitleModal>
+    <DateModal {count} on:submit><h4>{Math.abs(value)}</h4></DateModal>
+    {#if value <= 0}
         <span>Days Left</span>
     {:else}
         <span>Days Since</span>
     {/if}
     <LinearProgress {progress}/>
-    <div class="actions" slot="actions">
-        <TitleModal {count} on:submit/>
-        <DateModal {count} on:submit/>
-    </div>
 </Count>
 
 <style>
-    .actions {
-        display: block;
-    }
     span {
         margin-bottom: 5px;
     }

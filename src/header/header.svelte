@@ -1,11 +1,11 @@
 <script>
-    import Button, { Label } from '@smui/button';
+    import Button, { Icon } from '@smui/button';
     import moment from 'moment';
     import GoogleAuth from './google-auth.svelte';
     import CountService from '../shared/count.service.js';
     import { selectedTab } from '../shared/selected-tab.store.js';
     import { user } from '../shared/user.service.js';
-    import { loading} from '../shared/loading.store.js';
+    import { loading, LOADING_TYPES } from '../shared/loading.store.js';
 
     function handleAdd() {
         user.subscribe(user => {
@@ -17,8 +17,8 @@
 <div class="header">
     <h1>Count Down</h1>
     <div>
-        {#if !$loading} 
-            <Button on:click={handleAdd} variant="unelevated"><Label>Add</Label></Button>
+        {#if $loading === LOADING_TYPES.LOADED} 
+            <Button on:click={handleAdd} variant="unelevated"><Icon class="material-icons">create</Icon></Button>
         {/if}
         <GoogleAuth/>
     </div>
