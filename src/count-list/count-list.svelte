@@ -7,7 +7,7 @@
     import Spinner from '../util/spinner.svelte';
     import CountService from '../shared/count.service.js';
     import { user } from '../shared/user.service.js';
-    import { loading } from '../shared/loading.store.js';
+    import { loading, LOADING_TYPES } from '../shared/loading.store.js';
     
     export let type;
 
@@ -25,7 +25,7 @@
             countSubscription = CountService.get(user.uid).subscribe(c => {
                 // use alphabetical until adding display order
                 counts = c.sort((a, b) => a.title.toLowerCase().localeCompare(b.title.toLowerCase()));
-                loading.set(false);
+                loading.set(LOADING_TYPES.LOADED);
             });
         });
     });
@@ -35,8 +35,11 @@
     });
 </script>
 
-{#if $loading}
+
+{#if $loading === LOADING_TYPES.INIT}
     <Spinner/>
+{:else if $loading === LOADING_TYPES.LOGGED_OUT}
+    <h3>Please log in</h3>
 {:else}
     <div class="list" transition:fade>
         {#if countsByType.length === 0}

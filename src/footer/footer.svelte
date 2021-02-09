@@ -8,23 +8,9 @@
         'Count Up': 'number'
     };
 
-    // use search param if set
-    let active = 'URLSearchParams' in window && new URLSearchParams(window.location.search).get('tab')
-        ? Object.keys(types)[new URLSearchParams(window.location.search).get('tab')]
-        : Object.keys(types)[0];
+    let active = Object.keys(types)[0];
 
-    $: {
-        selectedTab.set(types[active]);
-
-        // set search param
-        if ('URLSearchParams' in window) {
-            const params = new URLSearchParams(window.location.search);
-            if (!params.get('tab') || params.get('tab') && Object.keys(types)[params.get('tab')] != active) {
-                params.set('tab', Object.keys(types).indexOf(active));
-                history.replaceState(null, '', window.location.pathname + '?' + params.toString());
-            }
-        }
-    };
+    $: selectedTab.set(types[active]);
 </script>
 
 <div>

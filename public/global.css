@@ -55,3 +55,9 @@ input[type="range"] {
 .mdc-tab span.mdc-tab__text-label {
     color: #F4F0EB;
 }
+.mdc-button__icon {
+	margin-right: -4px !important;
+}
+.mdc-linear-progress__buffer {
+	background-color: #a7a7a7 !important;
+}

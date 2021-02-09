@@ -11,7 +11,7 @@
 </script>
 
 <Modal>
-    <span slot="name">Choose Title</span>
+    <span slot="name"><slot></slot></span>
 
     <h3>Choose Title</h3>
     <Textfield bind:value={count.title} Label="Title"/>

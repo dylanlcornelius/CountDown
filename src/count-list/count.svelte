@@ -1,6 +1,6 @@
 <script>
     import Paper from '@smui/paper';
-    import Button, { Label } from '@smui/button';
+    import IconButton from '@smui/icon-button';
     import CountService from '../shared/count.service.js';
 
     export let id;
@@ -12,22 +12,23 @@
 
 <div class="count">
     <Paper elevation={6}>
-        <slot></slot>
-        <div class="actions">
-            <Button color="secondary" on:click={handleDelete} variant="unelevated"><Label>Delete</Label></Button>
-            <slot name="actions"></slot>
+        <div class="delete">
+            <IconButton class="material-icons" on:click={handleDelete}>close</IconButton>
         </div>
+        <slot></slot>
+        <slot name="actions"></slot>
     </Paper>
 </div>
 
 <style>
     .count {
+        position: relative;
         width: 330px;
         margin: 5px auto;
     }
-    .actions {
-        margin-top: 10px;
-        display: flex;
-        justify-content: space-between;
+    .delete {
+        position: absolute;
+        top: 2px;
+        right: 2px;
     }
 </style>

@@ -11,7 +11,7 @@
 </script>
 
 <Modal>
-    <span slot="name">Choose Dates</span>
+    <span slot="name"><slot></slot></span>
 
     <h3>Choose Start Date</h3>
     <Textfield bind:value={count.startDate} Label="Start Date" type="date"/>
