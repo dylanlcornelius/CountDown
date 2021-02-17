@@ -18,12 +18,8 @@ export default {
             });
         });
     },
-    get(ref, id, field) {
-        if (id && field) {
-            return this.getAll(ref.where(field, 'array-contains', id));
-        } else {
-            return this.getAll(ref);
-        }
+    get(ref) {
+        return this.getAll(ref);
     },
     insert(ref, data) {
         ref.add(data).catch(error => {

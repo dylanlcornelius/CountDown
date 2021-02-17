@@ -12,7 +12,7 @@
     $: progress = moment(today).diff(moment(count.startDate), 'days') / moment(count.endDate).diff(moment(count.startDate), 'days');
 </script>
 
-<Count id={count.id}>
+<Count {count}>
     <TitleModal {count} on:submit><h3>{count.title}</h3></TitleModal>
     <DateModal {count} on:submit><h4>{Math.abs(value)}</h4></DateModal>
     {#if value <= 0}
