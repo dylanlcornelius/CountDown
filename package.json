@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "scripts": {
     "config": "node ./config.index.js",
-    "build": "npm run-script config && rollup -c",
+    "cache-version": "node ./cache-version.js",
+    "build": "npm run config && npm run cache-version && rollup -c",
     "dev": "rollup -c -w",
     "start": "sirv public"
   },

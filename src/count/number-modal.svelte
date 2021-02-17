@@ -3,7 +3,6 @@
     import Textfield from '@smui/textfield';
     import Button, { Label } from '@smui/button';
     import Modal from '../util/modal.svelte';
-    import CountService from '../shared/count.service.js';
 
     export let count;
 

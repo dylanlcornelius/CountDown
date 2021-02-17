@@ -3,10 +3,10 @@
     import IconButton from '@smui/icon-button';
     import CountService from '../shared/count.service.js';
 
-    export let id;
+    export let count;
 
     function handleDelete() {
-        CountService.delete(id);
+        CountService.delete(count);
     }
 </script>
 

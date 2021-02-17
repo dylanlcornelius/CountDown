@@ -6,10 +6,19 @@
     import { selectedTab } from '../shared/selected-tab.store.js';
     import { user } from '../shared/user.service.js';
     import { loading, LOADING_TYPES } from '../shared/loading.store.js';
+    import { STATUS_TYPES } from '../shared/status.store.js';
 
     function handleAdd() {
         user.subscribe(user => {
-            CountService.upsert({title: 'Title Goes Here', type: $selectedTab, startDate: moment().format(), endDate: moment().format(), value: 0, uids: [user.uid]});
+            CountService.upsert({
+                title: 'Title Goes Here',
+                type: $selectedTab,
+                startDate: moment().format(),
+                endDate: moment().format(),
+                value: 0,
+                uids: [user.uid],
+                status: STATUS_TYPES.ACTIVE
+            });
         });
     }
 </script>

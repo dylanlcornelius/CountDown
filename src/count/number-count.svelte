@@ -3,7 +3,6 @@
     import Button, { Icon } from '@smui/button';
     import Count from '../count-list/count.svelte';
     import TitleModal from './title-modal.svelte';
-    import CountService from '../shared/count.service.js';    
 
     export let count;
 
@@ -20,7 +19,7 @@
     }
 </script>
 
-<Count id={count.id}>
+<Count {count}>
     <TitleModal {count} on:submit><h3>{count.title}</h3></TitleModal>
     <h4>{count.value}</h4>
 
