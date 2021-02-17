@@ -1,18 +1,22 @@
-
-var cacheName = "writers-bloc-cache-" + Date.now();
+var cacheName = 'count-down-CACHE_NAME';
 var filesToCache = [
   "/",
   "/index.html",
   "/build/bundle.css",
   "/build/bundle.js",
   "/global.css",
-  "/manifest.json"
+  "/manifest.json",
+  "/favicon-16x16.png",
+  "/favicon-32x32.png",
+  "/favicon-96x96.png"
 ];
 
 self.addEventListener("install", function(e) {
   e.waitUntil(
     caches.open(cacheName).then(function(cache) {
       return cache.addAll(filesToCache);
+    }).then(function () {
+      return self.skipWaiting();
     })
   );
 });
@@ -27,15 +31,24 @@ self.addEventListener("activate", e => {
           }
         })
       );
+    }).then(function () {
+      return self.clients.claim();
     })
   );
 });
 
 self.addEventListener("fetch", e => {
   e.respondWith(
-    (async function() {
-      const response = await caches.match(e.request);
-      return response || fetch(e.request);
-    })()
+    caches.match(e.request).then(r => {
+      return r || fetch(e.request).then(response => {
+        if (e.request.method == 'POST') {
+          return response;
+        }
+        return caches.open(cacheName).then(cache => {
+          cache.put(e.request.url, response.clone());
+          return response;
+        });
+      });
+    })
   );
 });
