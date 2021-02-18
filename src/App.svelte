@@ -18,7 +18,7 @@
 <style>
 	main {
 		text-align: center;
-		margin: 0 auto 50px;
-		min-height: calc(100vh - 50px);
+		margin: 0 auto 90px;
+		min-height: calc(100vh - 90px);
 	}
 </style>
