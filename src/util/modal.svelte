@@ -33,6 +33,7 @@
         margin: 0 auto;
         padding: 0;
         background-color: inherit;
+        color: inherit;
     }
     button:focus {
         outline: none;

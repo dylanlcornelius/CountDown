@@ -8,8 +8,12 @@
     export let count;
 
     const today = moment().format('YYYY-MM-DD');
+    let progressBar;
     $: value = moment(today).diff(moment(count.endDate), 'days');
+    // today - start / end - start
     $: progress = moment(today).diff(moment(count.startDate), 'days') / moment(count.endDate).diff(moment(count.startDate), 'days');
+    // 0..280 | red -> purple
+    $: progressBar && progressBar.style.setProperty('--mdc-theme-primary', `hsl(${Math.min(progress * 120, 280).toString(10)}, 60%, 40%)`);
 </script>
 
 <Count {count}>
@@ -20,7 +24,9 @@
     {:else}
         <span>Days Since</span>
     {/if}
-    <LinearProgress {progress}/>
+    <div bind:this={progressBar}>
+        <LinearProgress {progress}/>
+    </div>
 </Count>
 
 <style>
