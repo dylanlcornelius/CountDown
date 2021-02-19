@@ -1,2 +1,2 @@
-# Count Down App
-Web application for counting the number of days away from a date
+# Count Down
+A website that counts the number of days until a date

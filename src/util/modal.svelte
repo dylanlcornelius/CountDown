@@ -29,6 +29,7 @@
 <style>
     button {
         border: none;
+        border-radius: 5px;
         width: 75%;
         margin: 0 auto;
         padding: 0;
@@ -37,7 +38,7 @@
     }
     button:focus {
         outline: none;
-        background-color: #e4e4e4;
+        background-color: #464646;
     }
     .overlay {
         z-index: 1;
