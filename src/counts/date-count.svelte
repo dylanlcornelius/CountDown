@@ -1,9 +1,9 @@
 <script>
     import moment from 'moment';
     import LinearProgress from '@smui/linear-progress';
-    import Count from '../count-list/count.svelte';
-    import TitleModal from './title-modal.svelte';
-    import DateModal from './date-modal.svelte';
+    import Count from './count.svelte';
+    import TitleModal from '../count-modals/title-modal.svelte';
+    import DateModal from '../count-modals/date-modal.svelte';
 
     export let count;
 

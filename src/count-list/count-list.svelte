@@ -1,13 +1,13 @@
 <script>
     import { onMount, onDestroy } from 'svelte';
     import { fade } from 'svelte/transition';
-    import DateCount from '../count/date-count.svelte';
-    import NumberCount from '../count/number-count.svelte';
-    import Spinner from '../util/spinner.svelte';
-    import CountService from '../shared/count.service.js';
-    import { user } from '../shared/user.service.js';
-    import { loading, LOADING_TYPES } from '../shared/loading.store.js';
-    import { status, STATUS_TYPES } from '../shared/status.store.js';
+    import DateCount from '../counts/date-count.svelte';
+    import NumberCount from '../counts/number-count.svelte';
+    import Spinner from './spinner.svelte';
+    import CountService from '../services/count.service.js';
+    import { user } from '../services/user.service.js';
+    import { loading, LOADING_TYPES } from '../stores/loading.store.js';
+    import { status, STATUS_TYPES } from '../stores/status.store.js';
     
     export let type;
 
@@ -15,10 +15,8 @@
     let countSubscription;
 
     $: filteredCounts = counts.filter(count => count.type === type && count.status === $status);
-    
-    function handleUpdate(event) {
-        CountService.upsert(event.detail.count);
-    }
+
+    const handleUpdate = event => CountService.upsert(event.detail.count);
 
     onMount(() => {
         user.subscribe(user => {
@@ -34,7 +32,6 @@
         countSubscription.unsubscribe();
     });
 </script>
-
 
 {#if $loading === LOADING_TYPES.INIT}
     <Spinner/>

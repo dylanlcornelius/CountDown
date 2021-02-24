@@ -3,13 +3,8 @@
 
     let isOpen = false;
 
-    function open() {
-        isOpen = true;
-    }
-
-    function close() {
-        isOpen = false;
-    }
+    const open = () => isOpen = true;
+    const close = () => isOpen = false;
 </script>
 
 <button on:click={open}>

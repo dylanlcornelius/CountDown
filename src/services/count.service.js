@@ -1,6 +1,6 @@
 import { Observable } from 'rxjs';
 import FirestoreService from './firestore.service.js';
-import { STATUS_TYPES } from './status.store.js';
+import { STATUS_TYPES } from '../stores/status.store.js';
 
 const ref = FirestoreService.getRef('counts');
 

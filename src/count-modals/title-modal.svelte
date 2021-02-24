@@ -2,8 +2,7 @@
     import { createEventDispatcher } from 'svelte';
     import Textfield from '@smui/textfield';
     import Button, { Label } from '@smui/button';
-    import Modal from '../util/modal.svelte';
-    import CountService from '../shared/count.service.js';
+    import Modal from './modal.svelte';
 
     export let count;
 

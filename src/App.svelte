@@ -1,7 +1,7 @@
 <script>
 	import Header from './header/header.svelte';
 	import CountList from './count-list/count-list.svelte';
-    import { selectedTab } from './shared/selected-tab.store.js';
+    import { selectedTab } from './stores/selected-tab.store.js';
 	import Footer from './footer/footer.svelte';
 
 	if ('serviceWorker' in navigator) {

@@ -1,7 +1,7 @@
 import { firebase } from '@firebase/app';
-import { environment } from '../environment.js';
 import 'firebase/firestore';
 import { Observable } from 'rxjs';
+import { environment } from '../environment.js';
 
 firebase.initializeApp(environment.firebaseConfig);
 firebase.firestore().enablePersistence();
@@ -31,8 +31,15 @@ export default {
             console.error(error);
         });
     },
+    updateAll(ref, data) {
+        data.forEach(d => {
+            ref.doc(d.id).set(d);
+        });
+    },
     upsert(ref, data) {
-        if (data.id) {
+        if (Array.isArray(data)) {
+            this.updateAll(ref, data);
+        } else if (data.id) {
             this.update(ref, data);
         } else {
             this.insert(ref, data)

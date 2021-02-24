@@ -1,13 +1,11 @@
 <script>
     import Paper from '@smui/paper';
     import IconButton from '@smui/icon-button';
-    import CountService from '../shared/count.service.js';
+    import CountService from '../services/count.service.js';
 
     export let count;
 
-    function handleDelete() {
-        CountService.delete(count);
-    }
+    const handleDelete = () => CountService.delete(count);
 </script>
 
 <div class="count">

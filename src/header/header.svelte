@@ -2,11 +2,11 @@
     import Button, { Icon } from '@smui/button';
     import moment from 'moment';
     import GoogleAuth from './google-auth.svelte';
-    import CountService from '../shared/count.service.js';
-    import { selectedTab } from '../shared/selected-tab.store.js';
-    import { user } from '../shared/user.service.js';
-    import { loading, LOADING_TYPES } from '../shared/loading.store.js';
-    import { STATUS_TYPES } from '../shared/status.store.js';
+    import CountService from '../services/count.service.js';
+    import { selectedTab } from '../stores/selected-tab.store.js';
+    import { user } from '../services/user.service.js';
+    import { loading, LOADING_TYPES } from '../stores/loading.store.js';
+    import { STATUS_TYPES } from '../stores/status.store.js';
 
     function handleAdd() {
         user.subscribe(user => {

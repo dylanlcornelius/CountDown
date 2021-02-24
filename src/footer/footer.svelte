@@ -3,8 +3,8 @@
     import Checkbox from '@smui/checkbox';
     import TabBar from '@smui/tab-bar';
     import Tab, { Label } from '@smui/tab';
-    import { selectedTab } from '../shared/selected-tab.store.js';
-    import { status, STATUS_TYPES } from '../shared/status.store.js';
+    import { selectedTab } from '../stores/selected-tab.store.js';
+    import { status, STATUS_TYPES } from '../stores/status.store.js';
 
     const types = {
         'Count Down': 'date',
