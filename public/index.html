@@ -2,18 +2,39 @@
 <html lang="en">
 <head>
 	<meta charset='utf-8'>
-	<meta name='viewport' content='width=device-width,initial-scale=1'>
-	<meta name="theme-color" content="#9E2020">
+	<meta name='viewport' content='width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no'>
+	
+	<!-- Android -->
+	<meta name="theme-color" content="#211f23">
+	<meta name="mobile-web-app-capable" content="yes">
+
+	<!-- Windows -->
+	<meta name="msapplication-navbutton-color" content="#211f23">
+	<meta name="msapplication-TileColor" content="#211f23">
+	<meta name="msapplication-TileImage" content="/build/assets/icons/icon-144x144.png">
+
+	<!-- Pinned Sites -->
+	<meta name="application-name" content="Count Down">
+	<meta name="msapplication-tooltip" content="Count Something!">
+	<meta name="msapplication-starturl" content="/">
 
 	<title>Count Down</title>
 
-	<link rel="apple-touch-icon" href="assets/icons/icon-192x192.png">
-	<link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
-	<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-	<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+	<link rel="icon" type="image/png" sizes="16x16" href="/build/assets/icons/icon-16x16.png">
+	<link rel="icon" type="image/png" sizes="32x32" href="/build/assets/icons/icon-32x32.png">
+	<link rel="icon" type="image/png" sizes="96x96" href="/build/assets/icons/icon-96x96.png">
+
+	<!-- IOS -->
+	<link rel="apple-touch-icon" href="/build/assets/icons/icon-192x192.png">
+	
+	<!-- Android -->
+	<link rel="icon" type="image/png" sizes="128x128" href="/build/assets/icons/icon-128x128.png">
+	<link rel="icon" type="image/png" sizes="192x192" href="/build/assets/icons/icon-192x192.png">
+
+	<link rel="manifest" href="manifest.json">
+
 	<link rel='stylesheet' href='/global.css'>
 	<link rel='stylesheet' href='/build/bundle.css'>
-	<link rel="manifest" href="manifest.json">
 
 	<script defer src='/build/bundle.js'></script>
 	<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">

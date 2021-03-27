@@ -1,12 +1,11 @@
 <script>
     import { onMount } from 'svelte';
     import Button, { Icon } from '@smui/button';
-    import { fade } from 'svelte/transition';
     import { firebase } from '@firebase/app';
     import '@firebase/auth';
     import { token } from './token.store.js';
-    import { user } from '../shared/user.service.js';
-    import { loading, LOADING_TYPES } from '../shared/loading.store.js';
+    import { user } from '../services/user.service.js';
+    import { loading, LOADING_TYPES } from '../stores/loading.store.js';
 
     function initToken() {
         firebase.auth().onAuthStateChanged(currentUser => {
@@ -26,7 +25,7 @@
     }
 
     function handleLogin() {
-        let provider = new firebase.auth.GoogleAuthProvider();
+        const provider = new firebase.auth.GoogleAuthProvider();
         firebase.auth().signInWithRedirect(provider);
     }
 

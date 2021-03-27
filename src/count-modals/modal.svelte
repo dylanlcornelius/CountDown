@@ -3,13 +3,8 @@
 
     let isOpen = false;
 
-    function open() {
-        isOpen = true;
-    }
-
-    function close() {
-        isOpen = false;
-    }
+    const open = () => isOpen = true;
+    const close = () => isOpen = false;
 </script>
 
 <button on:click={open}>
@@ -29,6 +24,7 @@
 <style>
     button {
         border: none;
+        border-radius: 5px;
         width: 75%;
         margin: 0 auto;
         padding: 0;
@@ -37,7 +33,7 @@
     }
     button:focus {
         outline: none;
-        background-color: #e4e4e4;
+        background-color: #464646;
     }
     .overlay {
         z-index: 1;

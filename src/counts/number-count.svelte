@@ -1,8 +1,9 @@
 <script>
     import { createEventDispatcher } from 'svelte';
     import Button, { Icon } from '@smui/button';
-    import Count from '../count-list/count.svelte';
-    import TitleModal from './title-modal.svelte';
+    import Count from './count.svelte';
+    import TitleModal from '../count-modals/title-modal.svelte';
+    import NumberModal from '../count-modals/number-modal.svelte';
 
     export let count;
 
@@ -19,19 +20,12 @@
     }
 </script>
 
-<Count {count}>
+<Count {count} on:reorder>
+    <NumberModal {count} on:submit><h4>{count.value}</h4></NumberModal>
     <TitleModal {count} on:submit><h3>{count.title}</h3></TitleModal>
-    <h4>{count.value}</h4>
 
-    <div slot="actions">
+    <div class="actions" slot="actions">
         <Button on:click={decrement} variant="unelevated"><Icon class="material-icons">remove</Icon></Button>
         <Button on:click={increment} variant="unelevated"><Icon class="material-icons">add</Icon></Button>
     </div>
 </Count>
-
-<style>
-    div {
-        display: flex;
-        gap: 10px;
-    }
-</style>

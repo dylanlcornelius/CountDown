@@ -6,9 +6,16 @@ var filesToCache = [
   "/build/bundle.js",
   "/global.css",
   "/manifest.json",
-  "/favicon-16x16.png",
-  "/favicon-32x32.png",
-  "/favicon-96x96.png"
+  "/build/assets/icons/icon-16x16.png",
+  "/build/assets/icons/icon-32x32.png",
+  "/build/assets/icons/icon-72x72.png",
+  "/build/assets/icons/icon-96x96.png",
+  "/build/assets/icons/icon-128x128.png",
+  "/build/assets/icons/icon-144x144.png",
+  "/build/assets/icons/icon-152x152.png",
+  "/build/assets/icons/icon-192x192.png",
+  "/build/assets/icons/icon-384x384.png",
+  "/build/assets/icons/icon-512x512.png"
 ];
 
 self.addEventListener("install", function(e) {
