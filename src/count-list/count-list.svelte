@@ -1,6 +1,7 @@
 <script>
     import { onMount, onDestroy } from 'svelte';
     import { fade } from 'svelte/transition';
+    import { flip } from 'svelte/animate';
     import DateCount from '../counts/date-count.svelte';
     import NumberCount from '../counts/number-count.svelte';
     import Spinner from './spinner.svelte';
@@ -17,12 +18,12 @@
     $: filteredCounts = counts.filter(count => count.type === type && count.status === $status);
 
     const handleUpdate = event => CountService.upsert(event.detail.count);
+    const handleReorder = ({detail: {isUp, countId}}) => CountService.reorder(isUp, countId, filteredCounts);
 
     onMount(() => {
         user.subscribe(user => {
             countSubscription = CountService.get(user.uid).subscribe(c => {
-                // use alphabetical until adding display order
-                counts = c.sort((a, b) => a.title.toLowerCase().localeCompare(b.title.toLowerCase()));
+                counts = c.sort(CountService.sort);
                 loading.set(LOADING_TYPES.LOADED);
             });
         });
@@ -46,12 +47,14 @@
                 <h3>No counts archived</h3>
             {/if}
         {/if}
-        {#each filteredCounts as count}
-            {#if type === 'date'}
-                <DateCount {count} on:submit={handleUpdate}/>
-            {:else}
-                <NumberCount {count} on:submit={handleUpdate}/>
-            {/if}
+        {#each filteredCounts as count (count.id)}
+            <span animate:flip="{{duration: 500}}">
+                {#if type === 'date'}
+                    <DateCount {count} on:submit={handleUpdate} on:reorder={handleReorder}/>
+                {:else}
+                    <NumberCount {count} on:submit={handleUpdate} on:reorder={handleReorder}/>
+                {/if}
+            </span>
         {/each}
     </div>
 {/if}
@@ -60,7 +63,7 @@
     .list {
         display: flex;
         flex-direction: column;
-        max-height: calc(100vh - 140px); /* header(50px) + footer(90px) */
+        height: calc(100vh - 140px); /* header(50px) + footer(90px) */
         overflow-y: auto;
     }
 </style>

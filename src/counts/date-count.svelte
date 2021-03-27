@@ -16,7 +16,7 @@
     $: progressBar && progressBar.style.setProperty('--mdc-theme-primary', `hsl(${Math.min(progress * 120, 280).toString(10)}, 60%, 40%)`);
 </script>
 
-<Count {count}>
+<Count {count} on:reorder>
     <TitleModal {count} on:submit><h3>{count.title}</h3></TitleModal>
     <DateModal {count} on:submit><h4>{Math.abs(value)}</h4></DateModal>
     {#if value <= 0}

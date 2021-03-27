@@ -17,7 +17,8 @@
                 endDate: moment().format(),
                 value: 0,
                 uids: [user.uid],
-                status: STATUS_TYPES.ACTIVE
+                status: STATUS_TYPES.ACTIVE,
+                order: -1
             });
         });
     }

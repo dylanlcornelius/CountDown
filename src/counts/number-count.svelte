@@ -20,19 +20,12 @@
     }
 </script>
 
-<Count {count}>
+<Count {count} on:reorder>
     <NumberModal {count} on:submit><h4>{count.value}</h4></NumberModal>
     <TitleModal {count} on:submit><h3>{count.title}</h3></TitleModal>
 
-    <div slot="actions">
+    <div class="actions" slot="actions">
         <Button on:click={decrement} variant="unelevated"><Icon class="material-icons">remove</Icon></Button>
         <Button on:click={increment} variant="unelevated"><Icon class="material-icons">add</Icon></Button>
     </div>
 </Count>
-
-<style>
-    div {
-        display: flex;
-        gap: 10px;
-    }
-</style>
