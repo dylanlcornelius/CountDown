@@ -3,10 +3,16 @@
     import Textfield from '@smui/textfield';
     import Button, { Label } from '@smui/button';
     import Modal from './modal.svelte';
+    import CountService from '../services/count.service.js';
 
     export let count;
 
     const dispatch = createEventDispatcher();
+
+    function handleUpdate() {
+        count = CountService.trackHistory(count);
+        dispatch('submit', {count})
+    }
 </script>
 
 <Modal>
@@ -16,6 +22,6 @@
     <Textfield bind:value={count.value} Label="Value"/>
 
     <div slot="actions">
-        <Button on:click={dispatch('submit', {count})} variant="unelevated"><Label>Submit</Label></Button>
+        <Button on:click={handleUpdate} variant="unelevated"><Label>Submit</Label></Button>
     </div>
 </Modal>

@@ -19,3 +19,11 @@
         <Button on:click={dispatch('submit', {count})} variant="unelevated"><Label>Submit</Label></Button>
     </div>
 </Modal>
+
+<style>
+    span {
+        display: block;
+        width: 75%;
+        margin: 0 auto;
+    }
+</style>
