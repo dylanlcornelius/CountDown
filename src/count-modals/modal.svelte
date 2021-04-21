@@ -25,8 +25,6 @@
     button {
         border: none;
         border-radius: 5px;
-        width: 75%;
-        margin: 0 auto;
         padding: 0;
         background-color: inherit;
         color: inherit;

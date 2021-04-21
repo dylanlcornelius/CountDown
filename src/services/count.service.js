@@ -1,4 +1,5 @@
 import { Observable } from 'rxjs';
+import moment from 'moment';
 import FirestoreService from './firestore.service.js';
 import { STATUS_TYPES } from '../stores/status.store.js';
 
@@ -22,6 +23,21 @@ export default {
         } else {
             FirestoreService.delete(ref, data.id);
         }
+    },
+    trackHistory(count) {
+        if (!count.history) {
+            count.history = [];
+        }
+
+        const now = moment().format('YYYY-MM-DD');
+        const today = count.history.find(history => history.date === now);
+        
+        if (today) {
+            today.value = count.value;
+        } else {
+            count.history.push({date: now, value: count.value});
+        }
+        return count;
     },
     reorder(isUp, countId, counts) {
         // always reindex ordering to account for new, deleted, and archived counts
